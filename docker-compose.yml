@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  fergus.techtest.webapi:
+    image: ${DOCKER_REGISTRY-}fergus.techtest.webapi
+    build:
+      context: .
+      dockerfile: WebApi/Dockerfile

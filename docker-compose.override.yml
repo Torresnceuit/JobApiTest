@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  fergus.techtest.sqlserver:
+      container_name: fergus.techtest.sqlserver
+      image: mcr.microsoft.com/mssql/server:2019-latest
+      environment: 
+        ACCEPT_EULA: "Y"
+        SA_PASSWORD: "Fergus@2022!!"
+        MSSQL_PID: Developer
+      ports: 
+        - "1433:1433"
+  fergus.techtest.webapi:
+    container_name: fergus.techtest.webapi
+    depends_on: 
+      - fergus.techtest.sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - DB_SERVER_NAME=fergus.techtest.sqlserver
+      - DB_SERVER_USERNAME=SA
+      - DB_SERVER_PASSWORD=Fergus@2022!!
+      - DB_NAME=FergusTechTestDB
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
