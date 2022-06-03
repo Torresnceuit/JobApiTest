@@ -1,4 +1,5 @@
 ﻿using AppLogic;
+using DataAccess.DataModel;
 using Microsoft.AspNetCore.Mvc;
 using ServiceModel;
 
@@ -26,6 +27,13 @@ public class JobController : ControllerBase
     public async Task<IActionResult> Get(int skip = 0, int take = 100)
     {
         var result = await _jobLogic.GetJobsAsync(skip, take).ConfigureAwait(false);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get(JobStatus status, Guid clientId, string sort = "Time", string direction = "desc", int take = 100)
+    {
+        var result = await _jobLogic.GetJobsAsync(status, clientId, sort, direction, take).ConfigureAwait(false);
         return Ok(result);
     }
 

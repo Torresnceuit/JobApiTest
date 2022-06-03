@@ -38,6 +38,13 @@ public class JobLogic : IJobLogic
         var result = await _jobRepo.GetJobsAsync(skip, take).ConfigureAwait(false);
         return _mapper.Map<DbJob, Job>(result);
     }
+
+    public async Task<IEnumerable<Job>> GetJobsAsync(JobStatus status, Guid clientId, string sort = "Time", string direction = "desc", int take = 100)
+    {
+        var result = await _jobRepo.GetJobsAsync(status, clientId, sort, direction, take).ConfigureAwait(false);
+        return _mapper.Map<DbJob, Job>(result);
+    }
+
     public async Task<IEnumerable<Note>> GetNotesAsync(Guid jobId)
     {
         var result = await _jobRepo.GetNotesAsync(jobId).ConfigureAwait(false);

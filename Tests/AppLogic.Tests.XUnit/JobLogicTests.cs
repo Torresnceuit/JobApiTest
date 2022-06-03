@@ -207,6 +207,64 @@ public class JoLogicTests
     }
 
     [Fact]
+    public async Task FilterJobsReturnAllFilteredJobs()
+    {
+        // arrange
+        var mapper = new ObjectMapper();
+        using var factory = new ConnectionFactory();
+        using var context = factory.CreateContextForInMemory();
+
+        var clientId = Guid.NewGuid();
+        context.Client.Add(new
+            (
+                clientId,
+                "Client-A",
+                "ClientA@gmail.com",
+                "01234567890"
+            ));
+
+        context.Job.Add(new
+            (
+                Guid.NewGuid(),
+                JobStatus.COMPLETED,
+                clientId
+            ));
+
+        context.Job.Add(new
+            (
+                Guid.NewGuid(),
+                JobStatus.INVOICING,
+                clientId
+            ));
+
+        context.Job.Add(new
+            (
+                Guid.NewGuid(),
+                JobStatus.COMPLETED,
+                clientId
+            ));
+
+        context.Job.Add(new
+            (
+                Guid.NewGuid(),
+                JobStatus.COMPLETED,
+                clientId
+            ));
+
+        await context.SaveChangesAsync();
+
+        var jobRepository = new JobRepository(context);
+        var jobLogic = new JobLogic(jobRepository, mapper);
+
+        // act
+        var action = await jobLogic.GetJobsAsync(JobStatus.COMPLETED, clientId);
+
+        // assert
+        Assert.NotNull(action);
+        Assert.Equal(3, action.Count());
+    }
+
+    [Fact]
     public async Task GetAllNotesOfJobReturnAllNotes_When_JobIdIsValid()
     {
         // arrange
