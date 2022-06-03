@@ -28,6 +28,7 @@ public class JobRepository : IJobRepository
         }
 
         exist.Update(newJob);
+        exist.Client = await _techTestDbContext.Client.Where(x => x.Id == exist.ClientId).FirstOrDefaultAsync();
         await _techTestDbContext.SaveChangesAsync();
         return exist;
     }

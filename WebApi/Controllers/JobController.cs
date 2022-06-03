@@ -31,6 +31,7 @@ public class JobController : ControllerBase
     }
 
     [HttpGet]
+    [Route("filter")]
     public async Task<IActionResult> Get(JobStatus status, Guid clientId, string sort = "Time", string direction = "desc", int take = 100)
     {
         var result = await _jobLogic.GetJobsAsync(status, clientId, sort, direction, take).ConfigureAwait(false);
